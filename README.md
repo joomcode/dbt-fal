@@ -1,3 +1,6 @@
+# DBT Adapter to rub Python models
+
+
 # dbt-fal: do more with dbt
 
 dbt-fal is the easiest way to run Python with your [dbt](https://www.getdbt.com/) project.
