@@ -1,4 +1,4 @@
-# DBT Adapter to rub Python models
+# DBT Adapter to run Python models
 
 
 # dbt-fal: do more with dbt
