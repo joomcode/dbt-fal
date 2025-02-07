@@ -98,6 +98,10 @@ def write_df_to_relation(
 
         return support_redshift.write_df_to_relation(adapter, dataframe, relation)
 
+    elif adapter_type == "spark":
+        import dbt.adapters.fal_experimental.support.spark as support_spark
+        return support_spark.write_df_to_relation(adapter, dataframe,  relation)
+
     else:
         with new_connection(adapter, "fal:write_df_to_relation") as connection:
             # TODO: this should probably live in the materialization macro.
@@ -193,13 +197,12 @@ def prepare_for_adapter(adapter: BaseAdapter, function: Any) -> Any:
         ))
 
         if adapter.type() == "spark" and len(parts) == 2:
-            parts = [None] + parts  # add the database
+            # spark relations accepts database, schema, identifier,
+            # but only schema and identifier can be provided
+            # so we need to align parts
+            parts = [None] + parts
 
-        print(111111111111111111111)
-        print(parts)
-        # fixme: throws "Cursor not available"
         relation = adapter.Relation.create(*parts, type=RelationType.Table)
-        print(2222222222222222222222)
         return function(adapter, relation, *args, **kwargs)
 
     return wrapped

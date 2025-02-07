@@ -12,10 +12,13 @@ def read_relation_as_df(adapter: BaseAdapter, relation: BaseRelation) -> DataFra
 
     assert adapter.type() == "spark"
 
-    with new_connection(adapter, "fal-spark:read_relation_as_df") as conn:
+    with (new_connection(adapter, "fal-spark:read_relation_as_df") as conn):
+        adapter.connections.open(conn)
         assert conn.credentials.method == SparkConnectionMethod.SESSION
+        conn.handle.cursor()
         conn.handle.execute(sql)
-        df = conn.handle._df
+        df = conn.handle._cursor._df
+        adapter.connections.close(conn)
 
     return df
 
@@ -28,13 +31,9 @@ def write_df_to_relation(
     assert adapter.type() == "spark"
 
     with new_connection(adapter, "fal-spark:write_df_to_relation") as conn:
-        # from pprint import pprint
-        # pprint(conn)
-        # pprint(conn.credentials)
         assert conn.credentials.method == SparkConnectionMethod.SESSION
-        db = relation.database
+        db = relation.schema
         table = relation.identifier
-        print(f'writing db={db}, table={table}')
 
         (
             df
