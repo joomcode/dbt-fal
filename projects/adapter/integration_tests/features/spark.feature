@@ -3,19 +3,20 @@ Feature: Python models
     Given the project spark
     Given the profile spark
 
-  Scenario: Run a project with a SQL model
+  Scenario: Run a project with a SQL model with table materialization
     When the following shell command is invoked:
       """
-      dbt run --profiles-dir $profilesDir --project-dir $baseDir
+      dbt run --profiles-dir $profilesDir --project-dir $baseDir --select +model_b
       """
+    Then there should be no errors
     Then the following models are calculated in order:
       | model_a | model_b |
-#
-#  Scenario: Get datawarehouse for target.type, env.type and adapter.type()
-#    When the following shell command is invoked:
-#      """
-#      dbt run --profiles-dir $profilesDir --project-dir $baseDir --select model_a
-#      """
-#    Then the compiled SQL model model_a has the string "-- adapter.type() = $profile"
-#    Then the compiled SQL model model_a has the string "-- target.type = $profile"
-#    Then the compiled SQL model model_a has the string "-- env.type = $profile"
+
+  Scenario: Run a project with a SQL model with incremental materialization
+    When the following shell command is invoked:
+      """
+      dbt run --profiles-dir $profilesDir --project-dir $baseDir --select +model_c
+      """
+    Then there should be no errors
+    Then the following models are calculated in order:
+      | model_a | model_c |

@@ -32,9 +32,6 @@ def run_command_step(context):
                 process.returncode, command, context.shell_stdout, context.shell_stderr
             )
     except BaseException as e:
-        print(context.shell_stdout)
-        print(context.shell_stderr)
-        raise
         context.exc = e
 
 @then("there should be no errors")

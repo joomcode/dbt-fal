@@ -30,6 +30,8 @@ def write_df_to_relation(
 ):
     assert adapter.type() == "spark"
 
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
     with new_connection(adapter, "fal-spark:write_df_to_relation") as conn:
         assert conn.credentials.method == SparkConnectionMethod.SESSION
         db = relation.schema
