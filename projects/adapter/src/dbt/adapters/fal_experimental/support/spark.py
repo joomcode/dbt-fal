@@ -1,8 +1,8 @@
-from attr import dataclass
 from dbt.adapters.base import BaseAdapter, BaseRelation
 from dbt.adapters.spark import SparkAdapter
 from dbt.adapters.spark.connections import SparkConnectionMethod
 from pyspark.sql import DataFrame
+
 from dbt.adapters.fal_experimental.adapter_support import new_connection
 
 
