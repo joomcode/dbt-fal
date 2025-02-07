@@ -1,19 +1,16 @@
+from contextlib import contextmanager
 from typing import Optional
 
-from collections import defaultdict
-from contextlib import contextmanager
 from dbt.adapters.base.impl import BaseAdapter
 from dbt.adapters.base.relation import BaseRelation
-from dbt.adapters.protocol import AdapterConfig
 from dbt.adapters.factory import FACTORY
-
+from dbt.adapters.protocol import AdapterConfig
 # TODO: offer in `from isolate import is_agent`
 from isolate.connections.common import is_agent
 
 from .connections import FalEncCredentials
-from .wrappers import FalEncAdapterWrapper, FalCredentialsWrapper
-
 from .load_db_profile import load_profiles_info_1_5
+from .wrappers import FalEncAdapterWrapper, FalCredentialsWrapper
 
 
 class FalConfigs(AdapterConfig):

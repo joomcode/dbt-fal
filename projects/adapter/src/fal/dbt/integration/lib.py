@@ -578,15 +578,15 @@ def _sqlalchemy_engine_write_relation(
         adapter, _connection_name("write_target", relation, _hash=False), True
     ):
         engine = _create_engine_from_connection(adapter)
-
-        rows_affected = data.to_sql(
-            name=identifier,
-            con=engine,
-            schema=schema,
-            if_exists="append",
-            index=False,
-            dtype=dtype,
-        )
+        with engine.connect() as connection:
+            rows_affected = data.to_sql(
+                name=identifier,
+                con=connection,
+                schema=schema,
+                if_exists="append",
+                index=False,
+                dtype=dtype,
+            )
 
         return AdapterResponse("OK", rows_affected=rows_affected)
 

@@ -437,7 +437,7 @@ class CompileArgs:
     exclude: Tuple[str]
     state: Optional[Path]
     single_threaded: Optional[bool]
-
+    defer_state: Optional[Path] = None
 
 @has_side_effects
 class FalDbt:
@@ -677,11 +677,12 @@ class FalDbt:
     ) -> ManifestNode:
         # HACK: always setting node package as self.project_dir
         target_model: MaybeNonSource = self._manifest.native_manifest.resolve_ref(
-            target_model_name,
-            target_package_name,
-            None,
-            self.project_dir,
-            self.project_dir,
+            source_node=None,
+            target_model_name=target_model_name,
+            target_model_package=target_package_name,
+            target_model_version=None,
+            current_project=self.project_dir,
+            node_package=self.project_dir,
         )
         package_str = f"'{target_package_name}'." if target_package_name else ""
         model_str = f"{package_str}'{target_model_name}'"

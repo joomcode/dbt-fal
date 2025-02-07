@@ -19,9 +19,13 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.9,<3.11"
 dbt-core = ">=1.7,<=1.7.5"
-pandas = "^1.3.4"
+numpy = "1.26.1"
+grpcio = "1.69.0"
+pyarrow = "19.0.0"
+greenlet = "3.0.2"
+pandas = "^1.4.6"
 posthog = "^1.4.5"
 "backports.functools_lru_cache" = "^1.6.4"
 
@@ -41,6 +45,9 @@ dill = "0.3.7"
 sqlalchemy = "^1.4.41"
 
 # Adapters
+
+# spark
+pyspark = { version = "^3.5.3", optional = true }
 
 ## snowflake
 snowflake-connector-python = { version = "~=3.0", extras = ["pandas"], optional = true }
@@ -81,13 +88,15 @@ teleport = ["s3fs"]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^5.2"
+pytest = "^7.0"
 black = "^22.3"
 behave = "^1.2.6"
 mock = "^4.0.3"
 pytest-mock = "^3.7.0"
 matplotlib = "^3.5.2"
 requests = "^2.27.1"
+py = "^1.11.0"
+dbt-postgres = "1.7.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
