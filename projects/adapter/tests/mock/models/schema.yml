@@ -48,6 +48,8 @@ models:
   - name: model_empty_fal
     meta:
       fal:
+  - name: model_python_spark
+  - name: model_sql_spark
 
 # global
 fal:

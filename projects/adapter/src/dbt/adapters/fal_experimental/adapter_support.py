@@ -49,19 +49,19 @@ def _get_alchemy_engine(adapter: BaseAdapter, connection: Connection) -> Any:
 
 def drop_relation_if_it_exists(adapter: BaseAdapter, relation: BaseRelation) -> None:
     if adapter.get_relation(
-        database=relation.database,
-        schema=relation.schema,
-        identifier=relation.identifier,
+            database=relation.database,
+            schema=relation.schema,
+            identifier=relation.identifier,
     ):
         adapter.drop_relation(relation)
 
 
 def write_df_to_relation(
-    adapter: BaseAdapter,
-    relation: BaseRelation,
-    dataframe: pd.DataFrame,
-    *,
-    if_exists: str = "replace",
+        adapter: BaseAdapter,
+        relation: BaseRelation,
+        dataframe: pd.DataFrame,
+        *,
+        if_exists: str = "replace",
 ) -> AdapterResponse:
     """Generic version of the write_df_to_relation. Materialize the given
     dataframe to the targeted relation on the adapter."""
@@ -129,7 +129,6 @@ def write_df_to_relation(
 
 def read_relation_as_df(adapter: BaseAdapter, relation: BaseRelation) -> pd.DataFrame:
     """Generic version of the read_df_from_relation."""
-
     adapter_type = adapter.type()
 
     if adapter_type == "snowflake":
@@ -162,6 +161,10 @@ def read_relation_as_df(adapter: BaseAdapter, relation: BaseRelation) -> pd.Data
 
         return support_redshift.read_relation_as_df(adapter, relation)
 
+    elif adapter.type() == "spark":
+        import dbt.adapters.fal_experimental.support.spark as support_spark
+        return support_spark.read_relation_as_df(adapter, relation)
+
     else:
         with new_connection(adapter, "fal:read_relation_as_df") as connection:
             alchemy_engine = _get_alchemy_engine(adapter, connection)
@@ -184,22 +187,29 @@ def prepare_for_adapter(adapter: BaseAdapter, function: Any) -> Any:
         # and the recommended solution would be to create a macro `fal__resolve_model_name`
         # but it is not possible thanks a macro resolution error we get by returning the db_adapter type.
         # The overall solution could be to avoid creating a Relation and just passing the string as is to the read/write functions.
-        parts = map(
+        parts = list(map(
             lambda part: part.strip(adapter.Relation.quote_character),
             [*quoted_relation.split(".")],
-        )
+        ))
 
+        if adapter.type() == "spark" and len(parts) == 2:
+            parts = [None] + parts  # add the database
+
+        print(111111111111111111111)
+        print(parts)
+        # fixme: throws "Cursor not available"
         relation = adapter.Relation.create(*parts, type=RelationType.Table)
+        print(2222222222222222222222)
         return function(adapter, relation, *args, **kwargs)
 
     return wrapped
 
 
 def reconstruct_adapter(
-    flags: Namespace,
-    config: RuntimeConfig,
-    manifest: Manifest,
-    macro_manifest: MacroManifest,
+        flags: Namespace,
+        config: RuntimeConfig,
+        manifest: Manifest,
+        macro_manifest: MacroManifest,
 ) -> BaseAdapter:
     from dbt.flags import set_flags
     from dbt.tracking import do_not_track

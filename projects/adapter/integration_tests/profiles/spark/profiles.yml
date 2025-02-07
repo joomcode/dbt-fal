@@ -1,0 +1,14 @@
+config:
+  send_anonymous_usage_stats: False
+
+fal_test:
+  target: dev
+  outputs:
+    dev:
+      type: fal
+      db_profile: dev_spark
+    dev_spark:
+      type: spark
+      method: session
+      host: "noop"
+      schema: "custom"

@@ -32,6 +32,9 @@ def run_command_step(context):
                 process.returncode, command, context.shell_stdout, context.shell_stderr
             )
     except BaseException as e:
+        print(context.shell_stdout)
+        print(context.shell_stderr)
+        raise
         context.exc = e
 
 @then("there should be no errors")
@@ -69,6 +72,10 @@ def set_project_folder(context, project: str):
     context.temp_dir = tempfile.TemporaryDirectory()
     context.project_name = _load_dbt_project_file(context)["name"]
     os.environ["DBT_TARGET_PATH"] = target_path(context)
+
+@given("the profile {profile}")
+def set_profile(context, profile: str):
+    context.profile = profile
 
 
 @then("the following models are calculated in order")
@@ -160,6 +167,7 @@ def _get_profile(context) -> str:
         "athena",
         "trino",
         "sqlserver",
+        "spark",
     ]
     profile = context.config.userdata.get("profile", "postgres")
     if profile not in available_profiles:

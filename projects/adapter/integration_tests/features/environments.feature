@@ -1,3 +1,6 @@
+# This one fails trying to execute pip install, probably because new dbt-fal version 1.7.1
+# that is missing in public pypi
+@venv
 Feature: Python models with defined envs
   Background: Project Setup
     Given the project env_project

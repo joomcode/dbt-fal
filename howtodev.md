@@ -39,7 +39,10 @@ pyenv local 3.10
 cd dbt-fal/projects/adapter
 poetry config virtualenvs.in-project true  # this will create local .venv dir to use in PyCharm
 poetry env use 3.10
-poetry lock && poetry install --with dev
+poetry lock 
+poetry install --with dev
+poetry install --extras postgres
+poetry install --extras spark
 ```
 
 # Run tests

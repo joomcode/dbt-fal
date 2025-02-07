@@ -83,6 +83,7 @@ duckdb = ["duckdb-engine"]
 athena = []
 trino = ["trino"]
 teleport = ["s3fs"]
+spark = ["pyspark"]
 
 [tool.poetry.group.dev]
 optional = true
@@ -97,6 +98,7 @@ matplotlib = "^3.5.2"
 requests = "^2.27.1"
 py = "^1.11.0"
 dbt-postgres = "1.7.1"
+dbt-spark = "1.7.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
